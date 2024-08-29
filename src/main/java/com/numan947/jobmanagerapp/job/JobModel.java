@@ -1,13 +1,22 @@
 package com.numan947.jobmanagerapp.job;
 
+import com.numan947.jobmanagerapp.companies.CompanyModel;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "job_table")
 public class JobModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
     private String minSalary;
     private String maxSalary;
     private String location;
+
+    @ManyToOne
+    private CompanyModel company;
 
     public JobModel(Long id, String title, String description, String minSalary, String maxSalary, String location) {
         this.id = id;
@@ -16,6 +25,16 @@ public class JobModel {
         this.minSalary = minSalary;
         this.maxSalary = maxSalary;
         this.location = location;
+    }
+
+    public JobModel() {}
+
+    public CompanyModel getCompany() {
+        return company;
+    }
+
+    public void setCompany(CompanyModel company) {
+        this.company = company;
     }
 
     public Long getId() {
