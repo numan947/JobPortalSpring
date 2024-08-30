@@ -2,11 +2,13 @@ package com.numan947.jobmanagerapp.companies;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.numan947.jobmanagerapp.job.JobModel;
+import com.numan947.jobmanagerapp.reviews.ReviewModel;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
+@Table(name = "company_table")
 public class CompanyModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,8 +21,8 @@ public class CompanyModel {
     private List<JobModel> jobs;
 
     //TODO: Add relationship with Reviews
-//    @OneToMany
-//    private List<ReviewModel> reviews;
+    @OneToMany(mappedBy = "company")
+    private List<ReviewModel> reviews;
 
 
     public CompanyModel() {
