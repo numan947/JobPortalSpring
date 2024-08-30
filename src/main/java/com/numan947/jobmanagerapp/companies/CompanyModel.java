@@ -16,13 +16,12 @@ public class CompanyModel {
     private String name;
     private String description;
 
+    @OneToMany(mappedBy = "company")
+    private List<ReviewModel> reviews;
+
     @JsonIgnore
     @OneToMany(mappedBy = "company")
     private List<JobModel> jobs;
-
-    //TODO: Add relationship with Reviews
-    @OneToMany(mappedBy = "company")
-    private List<ReviewModel> reviews;
 
 
     public CompanyModel() {
@@ -65,5 +64,13 @@ public class CompanyModel {
 
     public void setJobs(List<JobModel> jobs) {
         this.jobs = jobs;
+    }
+
+    public List<ReviewModel> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<ReviewModel> reviews) {
+        this.reviews = reviews;
     }
 }
