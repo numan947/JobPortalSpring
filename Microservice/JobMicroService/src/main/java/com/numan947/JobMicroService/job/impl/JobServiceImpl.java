@@ -4,13 +4,15 @@ import com.numan947.JobMicroService.job.JobModel;
 import com.numan947.JobMicroService.job.JobRepository;
 import com.numan947.JobMicroService.job.JobService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
 @Service
 public class JobServiceImpl implements JobService {
     JobRepository jobRepository;
-    public JobServiceImpl(JobRepository jobRepository){
+
+    public JobServiceImpl(JobRepository jobRepository) {
         this.jobRepository = jobRepository;
     }
 
@@ -26,6 +28,8 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobModel> findAllJobs() {
+        RestTemplate rt = new RestTemplate();
+        rt.getForObject("http://localhost:8080/companies/1", Company.class);
         return jobRepository.findAll();
     }
 
@@ -37,7 +41,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public void updateJob(Long id, JobModel job) {
         JobModel j = findJobById(id);
-        if (j != null){
+        if (j != null) {
             j.setTitle(job.getTitle());
             j.setDescription(job.getDescription());
             j.setMinSalary(job.getMinSalary());
