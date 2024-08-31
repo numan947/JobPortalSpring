@@ -1,12 +1,16 @@
 package com.numan947.JobMicroService.job.impl;
 
+import com.numan947.JobMicroService.external.Company;
 import com.numan947.JobMicroService.job.JobModel;
 import com.numan947.JobMicroService.job.JobRepository;
 import com.numan947.JobMicroService.job.JobService;
+import com.numan947.JobMicroService.job.dto.JobWithCompanyDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -27,10 +31,11 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<JobModel> findAllJobs() {
-        RestTemplate rt = new RestTemplate();
-        rt.getForObject("http://localhost:8080/companies/1", Company.class);
-        return jobRepository.findAll();
+    public List<JobWithCompanyDTO> findAllJobs() {
+        List<JobModel> jobs = jobRepository.findAll();
+        return jobs.stream()
+                .map(this::getJobWithCompanyDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -49,5 +54,14 @@ public class JobServiceImpl implements JobService {
             j.setLocation(job.getLocation());
             jobRepository.save(j);
         }
+    }
+
+    private JobWithCompanyDTO getJobWithCompanyDTO(JobModel j){
+        if (j == null){
+            return null;
+        }
+        RestTemplate rt = new RestTemplate();
+        Company c = rt.getForObject("http://localhost:8081/companies/" + j.getCompanyId(), Company.class);
+        return new JobWithCompanyDTO(j, c);
     }
 }
