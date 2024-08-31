@@ -6,10 +6,8 @@ import java.util.List;
 
 public interface JobService {
     void createJob(JobModel job);
-    JobModel findJobById(Long id);
+    JobWithCompanyDTO findJobById(Long id);
     List<JobWithCompanyDTO> findAllJobs();
-
-    void deleteJob(Long id);
-
-    void updateJob(Long id, JobModel job);
+    boolean deleteJob(Long id);
+    boolean updateJob(Long id, JobModel job);
 }
