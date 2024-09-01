@@ -37,6 +37,19 @@ services:
       - backend
     restart: unless-stopped
 
+  rabbitmq:
+    image: rabbitmq:3.9.7-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - backend
+    restart: unless-stopped
+
 networks:
   backend:
     driver: bridge
