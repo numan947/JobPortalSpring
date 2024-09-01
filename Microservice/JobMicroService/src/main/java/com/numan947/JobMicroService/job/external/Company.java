@@ -1,4 +1,4 @@
-package com.numan947.JobMicroService.external;
+package com.numan947.JobMicroService.job.external;
 
 public class Company {
     private Long id;

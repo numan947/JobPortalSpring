@@ -1,19 +1,23 @@
 package com.numan947.JobMicroService.job.mapper;
 
-import com.numan947.JobMicroService.external.Company;
+import com.numan947.JobMicroService.job.external.Company;
+import com.numan947.JobMicroService.job.external.Review;
 import com.numan947.JobMicroService.job.JobModel;
-import com.numan947.JobMicroService.job.dto.JobWithCompanyDTO;
+import com.numan947.JobMicroService.job.dto.JobDTO;
+
+import java.util.List;
 
 public class JobMapper {
-    public static JobWithCompanyDTO toJobWithCompanyDTO(JobModel jobModel, Company company) {
-        JobWithCompanyDTO jobWithCompanyDTO = new JobWithCompanyDTO();
-        jobWithCompanyDTO.setId(jobModel.getId());
-        jobWithCompanyDTO.setTitle(jobModel.getTitle());
-        jobWithCompanyDTO.setDescription(jobModel.getDescription());
-        jobWithCompanyDTO.setMinSalary(jobModel.getMinSalary());
-        jobWithCompanyDTO.setMaxSalary(jobModel.getMaxSalary());
-        jobWithCompanyDTO.setLocation(jobModel.getLocation());
-        jobWithCompanyDTO.setCompany(company);
-        return jobWithCompanyDTO;
+    public static JobDTO toJobDTO(JobModel jobModel, Company company, List<Review> reviews) {
+        JobDTO jobDTO = new JobDTO();
+        jobDTO.setId(jobModel.getId());
+        jobDTO.setTitle(jobModel.getTitle());
+        jobDTO.setDescription(jobModel.getDescription());
+        jobDTO.setMinSalary(jobModel.getMinSalary());
+        jobDTO.setMaxSalary(jobModel.getMaxSalary());
+        jobDTO.setLocation(jobModel.getLocation());
+        jobDTO.setCompany(company);
+        jobDTO.setReviews(reviews);
+        return jobDTO;
     }
 }

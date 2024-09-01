@@ -1,26 +1,31 @@
 package com.numan947.JobMicroService.job.impl;
 
-import com.numan947.JobMicroService.external.Company;
+import com.numan947.JobMicroService.job.feignClients.CompanyClient;
+import com.numan947.JobMicroService.job.feignClients.ReviewClient;
+import com.numan947.JobMicroService.job.external.Company;
+import com.numan947.JobMicroService.job.external.Review;
 import com.numan947.JobMicroService.job.JobModel;
 import com.numan947.JobMicroService.job.JobRepository;
 import com.numan947.JobMicroService.job.JobService;
-import com.numan947.JobMicroService.job.dto.JobWithCompanyDTO;
+import com.numan947.JobMicroService.job.dto.JobDTO;
 import com.numan947.JobMicroService.job.mapper.JobMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class JobServiceImpl implements JobService {
     JobRepository jobRepository;
+    final CompanyClient companyClient;
+    final ReviewClient reviewClient;
     final RestTemplate loadBalancedRestTemplate;
 
-    public JobServiceImpl(JobRepository jobRepository, RestTemplate loadBalancedRestTemplate) {
+    public JobServiceImpl(JobRepository jobRepository, CompanyClient companyClient, ReviewClient reviewClient, RestTemplate loadBalancedRestTemplate) {
         this.jobRepository = jobRepository;
+        this.companyClient = companyClient;
+        this.reviewClient = reviewClient;
         this.loadBalancedRestTemplate = loadBalancedRestTemplate;
     }
 
@@ -30,15 +35,15 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public JobWithCompanyDTO findJobById(Long id) {
-        return getJobWithCompanyDTO(jobRepository.findById(id).orElse(null));
+    public JobDTO findJobById(Long id) {
+        return getJobDTO(jobRepository.findById(id).orElse(null));
     }
 
     @Override
-    public List<JobWithCompanyDTO> findAllJobs() {
+    public List<JobDTO> findAllJobs() {
         List<JobModel> jobs = jobRepository.findAll();
         return jobs.stream()
-                .map(this::getJobWithCompanyDTO)
+                .map(this::getJobDTO)
                 .collect(Collectors.toList());
     }
 
@@ -67,11 +72,12 @@ public class JobServiceImpl implements JobService {
         return false;
     }
 
-    private JobWithCompanyDTO getJobWithCompanyDTO(JobModel j){
+    private JobDTO getJobDTO(JobModel j){
         if (j == null){
             return null;
         }
-        Company c = loadBalancedRestTemplate.getForObject("http://CompanyMicroService:8081/companies/" + j.getCompanyId(), Company.class);
-        return JobMapper.toJobWithCompanyDTO(j, c);
+        Company c = companyClient.getCompany(j.getCompanyId());
+        List<Review> reviews = reviewClient.getReviews(j.getId());
+        return JobMapper.toJobDTO(j, c, reviews);
     }
 }

@@ -1,6 +1,6 @@
 package com.numan947.JobMicroService.job;
 
-import com.numan947.JobMicroService.job.dto.JobWithCompanyDTO;
+import com.numan947.JobMicroService.job.dto.JobDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ public class JobController {
     }
 
     @GetMapping(value = {"", "/"})
-    public ResponseEntity<List<JobWithCompanyDTO>> findAllJobs(){
+    public ResponseEntity<List<JobDTO>> findAllJobs(){
         return new ResponseEntity<>(jobService.findAllJobs(), HttpStatus.OK);
     }
 
@@ -28,8 +28,8 @@ public class JobController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<JobWithCompanyDTO> findJobById(@PathVariable Long id){
-        JobWithCompanyDTO j = jobService.findJobById(id);
+    public ResponseEntity<JobDTO> findJobById(@PathVariable Long id){
+        JobDTO j = jobService.findJobById(id);
         if (j == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

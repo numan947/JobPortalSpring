@@ -7,6 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class AppConfig {
+    // example of how to use the load balanced rest template
     @LoadBalanced
     @Bean
     public RestTemplate loadBalancedRestTemplate(){
