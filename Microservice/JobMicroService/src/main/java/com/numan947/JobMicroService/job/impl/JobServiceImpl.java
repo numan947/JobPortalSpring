@@ -9,6 +9,9 @@ import com.numan947.JobMicroService.job.JobRepository;
 import com.numan947.JobMicroService.job.JobService;
 import com.numan947.JobMicroService.job.dto.JobDTO;
 import com.numan947.JobMicroService.job.mapper.JobMapper;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -40,11 +43,18 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+//    @CircuitBreaker(name="companyBreaker", fallbackMethod = "findAllJobsFallback")
+//    @Retry(name="companyBreaker", fallbackMethod = "findAllJobsFallback")
+    @RateLimiter(name="companyBreaker", fallbackMethod = "findAllJobsFallback")
     public List<JobDTO> findAllJobs() {
         List<JobModel> jobs = jobRepository.findAll();
         return jobs.stream()
                 .map(this::getJobDTO)
                 .collect(Collectors.toList());
+    }
+    // Fallback method for findAllJobs
+    public List<String> findAllJobsFallback(Exception e){
+        return List.of("Company service is down. Please try again later.");
     }
 
     @Override
