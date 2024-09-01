@@ -3,6 +3,7 @@ package com.numan947.CompanyMicroService.companies.impl;
 import com.numan947.CompanyMicroService.companies.CompanyModel;
 import com.numan947.CompanyMicroService.companies.CompanyRepository;
 import com.numan947.CompanyMicroService.companies.CompanyService;
+import com.numan947.CompanyMicroService.companies.dto.ReviewMessageDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,5 +56,10 @@ public class CompanyServiceImpl implements CompanyService {
         CompanyModel companyModel = op.get();
         companyRepository.delete(companyModel);
         return true;
+    }
+
+    @Override
+    public void updateCompanyRating(ReviewMessageDTO reviewMessageDTO) {
+        System.out.println("Updating company rating for company id: " + reviewMessageDTO.getCompanyId());
     }
 }

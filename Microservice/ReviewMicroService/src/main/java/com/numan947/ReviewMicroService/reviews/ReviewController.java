@@ -1,5 +1,6 @@
 package com.numan947.ReviewMicroService.reviews;
 
+import com.numan947.ReviewMicroService.reviews.messaging.ReviewMessageProducer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +11,11 @@ import java.util.List;
 @RequestMapping("/reviews")
 public class ReviewController {
     private final ReviewService reviewService;
+    private final ReviewMessageProducer reviewMessageProducer;
 
-    public ReviewController(ReviewService reviewService) {
+    public ReviewController(ReviewService reviewService, ReviewMessageProducer reviewMessageProducer) {
         this.reviewService = reviewService;
+        this.reviewMessageProducer = reviewMessageProducer;
     }
 
     @GetMapping(path = {"", "/"})
@@ -22,8 +25,10 @@ public class ReviewController {
 
     @PostMapping(path = {"", "/"})
     public ResponseEntity<String> createReview(@RequestParam Long companyId, @RequestBody ReviewModel reviewModel) {
-        if(reviewService.addReview(companyId, reviewModel))
+        if(reviewService.addReview(companyId, reviewModel)){
+            reviewMessageProducer.sendMessage(reviewModel);
             return new ResponseEntity<>("Review created", HttpStatus.CREATED);
+        }
         else
             return new ResponseEntity<>("Company not found", HttpStatus.NOT_FOUND);
     }
