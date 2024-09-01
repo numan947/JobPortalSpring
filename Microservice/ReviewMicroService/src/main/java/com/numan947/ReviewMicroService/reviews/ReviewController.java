@@ -58,5 +58,10 @@ public class ReviewController {
             return new ResponseEntity<>("Review or company not found", HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/averageRating")
+    public ResponseEntity<Double> getAverageRating(@RequestParam Long companyId) {
+        return ResponseEntity.ok(reviewService.getAverageRating(companyId));
+    }
+
 
 }

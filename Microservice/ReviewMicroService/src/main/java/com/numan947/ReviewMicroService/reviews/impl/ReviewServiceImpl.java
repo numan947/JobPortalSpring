@@ -61,4 +61,10 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
+    @Override
+    public Double getAverageRating(Long companyId) {
+        List<ReviewModel> reviews = reviewRepository.findAllByCompanyId(companyId);
+        return reviews.stream().mapToDouble(ReviewModel::getRating).average().orElse(0.0);
+    }
+
 }

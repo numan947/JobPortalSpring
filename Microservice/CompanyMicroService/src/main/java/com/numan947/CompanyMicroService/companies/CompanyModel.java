@@ -13,16 +13,24 @@ public class CompanyModel {
     private Long id;
     private String name;
     private String description;
+    private Double averageRating;
 
+    public Double getAverageRating() {
+        return averageRating;
+    }
 
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
+    }
 
     public CompanyModel() {
     }
 
-    public CompanyModel(Long id, String name, String description) {
+    public CompanyModel(Long id, String name, String description, Double averageRating) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.averageRating = averageRating;
     }
 
     public Long getId() {
