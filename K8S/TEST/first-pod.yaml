@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: first-pod
+spec:
+  containers:
+  - name: first-pod
+    image: nginx:1.14.2
+    resources:
+      limits:
+        cpu: "1"
+        memory: "512Mi"
+    ports:
+    - containerPort: 80
+  
+  - name: second-pod
+    image: redis:6.2.5
+    resources:
+      limits:
+        cpu: "1"
+        memory: "512Mi"
