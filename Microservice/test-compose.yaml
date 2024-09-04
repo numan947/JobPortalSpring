@@ -1,0 +1,26 @@
+services:
+  gateway:
+    image: numan947/gatewayms
+    container_name: gateway
+#    depends_on:
+#      - config-server
+    ports:
+      - "8084:8084"
+    networks:
+      - backend
+      - microservices
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+networks:
+  backend:
+    external: true
+  microservices:
+    external: true
+
+volumes:
+  postgres:
+    external: true
+  pgadmin:
+    external: true

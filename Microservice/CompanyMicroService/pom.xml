@@ -118,6 +118,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<image>
+						<name>numan947/companyms</name>
+						<env>
+							<SPRING_PROFILES_ACTIVE>docker</SPRING_PROFILES_ACTIVE>
+						</env>
+					</image>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

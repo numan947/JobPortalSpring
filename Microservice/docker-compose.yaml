@@ -35,6 +35,7 @@ services:
       - "9411:9411"
     networks:
       - backend
+      - microservices
     restart: unless-stopped
 
   rabbitmq:
@@ -48,11 +49,100 @@ services:
       - "15672:15672"
     networks:
       - backend
+      - microservices
     restart: unless-stopped
+
+  service-registry:
+    image: numan947/servicereg
+    container_name: servicereg
+    ports:
+      - "8761:8761"
+    depends_on:
+      - rabbitmq
+      - postgres
+      - zipkin
+      - pgadmin
+    networks:
+      - backend
+      - microservices
+    restart: unless-stopped
+
+  config-server:
+    image: numan947/configserver
+    container_name: config-server
+    ports:
+      - "8080:8080"
+    depends_on:
+      - service-registry
+    networks:
+      - backend
+      - microservices
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+    restart: unless-stopped
+
+  companyms:
+    image: numan947/companyms
+    container_name: company-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - config-server
+    networks:
+      - backend
+      - microservices
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+
+  jobms:
+    image: numan947/jobms
+    container_name: job-service
+    depends_on:
+      - config-server
+    ports:
+      - "8082:8082"
+    networks:
+      - backend
+      - microservices
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  reviewms:
+    image: numan947/reviewms
+    container_name: review-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - config-server
+    networks:
+      - backend
+      - microservices
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  gateway:
+    image: numan947/gatewayms
+    container_name: gateway
+    depends_on:
+      - config-server
+    ports:
+      - "8084:8084"
+    networks:
+      - backend
+      - microservices
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
 
 networks:
   backend:
-    driver: bridge
+    external: true
+  microservices:
+    external: true
 
 volumes:
   postgres:
